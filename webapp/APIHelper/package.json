@@ -1,0 +1,19 @@
+{
+  "name": "apihelper",
+  "version": "1.0.0",
+  "description": "This is a package for API related helper functions.",
+  "files": [
+    "*.js",
+    "*/*.js"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Abhinav Chandrasekar",
+  "license": "ISC",
+  "dependencies": {
+    "jsonwebtoken": "^8.5.1",
+    "pg": "^8.8.0",
+    "pg-format": "^1.0.4"
+  }
+}
