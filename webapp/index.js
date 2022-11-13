@@ -1,6 +1,7 @@
 const Express = require("express");
 const BodyParser = require("body-parser");
 const CookieParser = require("cookie-parser");
+const Cors = require("cors");
 const AuthHelper = require("apihelper/AuthHelper");
 const Queries = require("apihelper/Queries");
 
@@ -14,6 +15,8 @@ app.use(BodyParser.urlencoded({
 }));
 
 app.use(BodyParser.json({ limit: '10MB' }));
+
+app.use(Cors());
 
 const NODEJS_PORT = process.env.NODEJS_PORT ?? "9000";
 
@@ -37,6 +40,7 @@ app.post("/api/authenticate", async (req, res, next) => {
 		if (!userAuthenticatedToken) {
 			return res.status(500).send({ status: "INTERNAL_SERVER_ERROR", errorMessage: "Something went wrong." });
 		}
+		res.cookie("reunion_auth", userAuthenticatedToken);
 		return res.status(200).send({ status: "SUCCESS", jwtToken: userAuthenticatedToken });
 	} catch (err) {
 		console.error("Error: middleware failed with error: ", err);
@@ -70,9 +74,9 @@ app.get("/api/posts/:id", async (req, res, next) => {
  */
 app.use(["/api/", "/api/*"], async (req, res, next) => {
 	try {
-		if (!req.headers.authorization || !AuthHelper.verifyJWT(req.headers.authorization)) { return res.status(401).send({ status: "UNAUTHORIZED", errorMessage: "The user authorization header is either missing or invalid." }); };
+		if (!req.cookies?.reunion_auth || !AuthHelper.verifyJWT(req.cookies.reunion_auth)) { return res.status(401).send({ status: "UNAUTHORIZED", errorMessage: "The user authorization header is either missing or invalid." }); };
 
-		const userDetails = AuthHelper.verifyJWT(req.headers.authorization);
+		const userDetails = AuthHelper.verifyJWT(req.cookies.reunion_auth);
 		let getUserByIdResult = await Queries.getUserById(userDetails.id);
 		if (!getUserByIdResult || !Array.isArray(getUserByIdResult)) {
 			return res.status(500).send({ status: "INTERNAL_SERVER_ERROR", errorMessage: "Something went wrong." });
