@@ -6,8 +6,8 @@ build() {
 }
 
 run() {
-	docker container run --name reunion-postgresdb -p 5432:5432 -d reunion/postgresdb
-	docker container run --name reunion-nodewebapp -p 9000:9000 -d reunion/nodewebapp
+	docker container run --name reunion-postgresdb -d reunion/postgresdb
+	docker container run --name reunion-nodewebapp -p 9090:9000 -d reunion/nodewebapp
 }
 
 shred() {

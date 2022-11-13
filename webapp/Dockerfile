@@ -1,7 +1,7 @@
 FROM docker.io/node:14.6.0-alpine
 
 ENV NODEJS_PORT "9000"
-ENV PGHOST "localhost"
+ENV PGHOST "5432"
 
 COPY webapp/APIHelper webapp/APIHelper
 RUN npm ci --prefix webapp/APIHelper
